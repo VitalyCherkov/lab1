@@ -15,7 +15,9 @@ int main(int argv, char *args[]){
 		return EXIT_FAILURE;
 	}
 
-	struct line *arr = readFile(fl);
+	struct line *arr = NULL;
+	size_t numberOfLines = readFile(fl, &arr);
+
 	if(!arr){
 		printf("Can not read file %s\n", args[1]);
 		printf("Format of file:\n");
@@ -23,16 +25,15 @@ int main(int argv, char *args[]){
 		return EXIT_FAILURE;
 	}
 
-	if(!sizeof(arr)){
+	if(!numberOfLines){
 		printf("There is no strings in your file\n");
 		return EXIT_FAILURE;
 	}
 
-	printUnique(arr, sizeof(arr) / sizeof(arr[0]));
+	printUnique(arr, numberOfLines);
 
-	printf("\n\nGOOD BYE\n\n");
+	printf("\n\nOK\n\n");
 
-	free(fl);
 	free(arr);
 	return EXIT_SUCCESS;
 }

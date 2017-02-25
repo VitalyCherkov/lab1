@@ -18,29 +18,34 @@ static unsigned long long getHash(const char *str){
 }
 
 // Ввод текстового файла
-struct line* readFile(FILE *fl){
-	struct line *arr;
-	size_t valueOfLines;
-	char sValueOfLines[20];
+int readFile(FILE *fl, struct line **arr){
+	size_t numberOfLines;
+	char sNumberOfLines[20];
 
-	if(!fgets(sValueOfLines, sizeof(sValueOfLines), fl))
-		return NULL;
-	if(!(valueOfLines = atoi(sValueOfLines)))
-		return NULL;
-
-	arr = malloc(sizeof(struct line) * valueOfLines);
-
-	char inputString[1000];
-	for(size_t i = 0; i < valueOfLines; i++){
-		if(!fgets(inputString, sizeof(inputString), fl))
-			return NULL;
-
-		arr[i]._line = malloc(sizeof(inputString));
-		strcpy(arr[i]._line, inputString);
-		arr[i].hash = getHash(arr[i]._line);
+	if(!fgets(sNumberOfLines, sizeof(sNumberOfLines), fl)){
+		*arr = NULL;
+		return 0;
+	}
+	if(!(numberOfLines = atoi(sNumberOfLines))){
+		*arr = NULL;
+		return 0;
 	}
 
-	return arr;
+	*arr = malloc(sizeof(struct line) * numberOfLines);
+
+	char inputString[1000];
+	for(size_t i = 0; i < numberOfLines; i++){
+		if(!fgets(inputString, sizeof(inputString), fl)){
+			*arr = NULL;
+			return 0;
+		}
+
+		(*arr)[i]._line = malloc(sizeof(inputString));
+		strcpy((*arr)[i]._line, inputString);
+		(*arr)[i].hash = getHash((*arr)[i]._line);
+	}
+
+	return numberOfLines;
 }
 
 // Компаратор для анс. логн лонг
@@ -53,31 +58,31 @@ int cmpULL(const unsigned long long *a, const unsigned long long *b){
 }
 
 // Нахождение уникальных строк
-int printUnique(const struct line *arr, const size_t valueOfLines){
-	unsigned long long *hashes = malloc(valueOfLines * sizeof(unsigned long long));
-	for(size_t i = 0; i < valueOfLines; i++){
+int printUnique(const struct line *arr, const size_t numberOfLines){
+	unsigned long long *hashes = malloc(numberOfLines * sizeof(unsigned long long));
+	for(size_t i = 0; i < numberOfLines; i++){
 		hashes[i] = arr[i].hash;
 	}
-	qsort(hashes, valueOfLines, sizeof(unsigned long long),
+	qsort(hashes, numberOfLines, sizeof(unsigned long long),
 		(int (*)(const void*, const void*)) cmpULL);
 
-	short *isPrinted = malloc(sizeof(short) * valueOfLines);
-	memset(isPrinted, 0, sizeof(short) * valueOfLines);
+	short *isPrinted = malloc(sizeof(short) * numberOfLines);
+	memset(isPrinted, 0, sizeof(short) * numberOfLines);
 
 	unsigned long long *pPos = NULL;
 	size_t rPos;
-	for(size_t i = 0; i < valueOfLines; i++){
-		pPos = (unsigned long long *)bsearch(&arr[i].hash, hashes, valueOfLines,
+	for(size_t i = 0; i < numberOfLines; i++){
+		pPos = (unsigned long long *)bsearch(&arr[i].hash, hashes, numberOfLines,
 			sizeof(hashes), 	(int (*)(const void*, const void*)) cmpULL);
 		rPos = pPos - hashes;
 		if(!isPrinted[rPos]){
 			isPrinted[rPos] = 1;
-			printf("%s\n", arr[i]._line);
+			printf("%s", arr[i]._line);
 		}
 	}
 
 	free(hashes);
 	free(isPrinted);
-	free(pPos);
+	//free(pPos);
 	return EXIT_SUCCESS;
 }
