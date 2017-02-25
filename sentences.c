@@ -19,23 +19,33 @@ static unsigned long long getHash(const char *str){
 
 // Ввод текстового файла
 int readFile(FILE *fl, struct line **arr){
+	const size_t maxNumberOfLines = 100000;
+	const size_t maxLengthOfLine = 1001;
+
 	size_t numberOfLines;
 	char sNumberOfLines[20];
 
-	if(!fgets(sNumberOfLines, sizeof(sNumberOfLines), fl)){
+	if(
+		!fgets(sNumberOfLines, sizeof(sNumberOfLines), fl) ||
+		!(numberOfLines = atoi(sNumberOfLines)) || numberOfLines > maxNumberOfLines
+	){
+		free(*arr);
 		*arr = NULL;
 		return 0;
 	}
-	if(!(numberOfLines = atoi(sNumberOfLines))){
-		*arr = NULL;
-		return 0;
-	}
+
+	//if(!(numberOfLines = atoi(sNumberOfLines)) || numberOfLines > maxNumberOfLines){
+	//	free(*arr);
+	//	*arr = NULL;
+	//	return 0;
+	//}
 
 	*arr = malloc(sizeof(struct line) * numberOfLines);
 
-	char inputString[1000];
+	char inputString[1002];
 	for(size_t i = 0; i < numberOfLines; i++){
-		if(!fgets(inputString, sizeof(inputString), fl)){
+		if(!fgets(inputString, sizeof(inputString), fl) || strlen(inputString) > maxLengthOfLine){
+			free(*arr);
 			*arr = NULL;
 			return 0;
 		}
@@ -49,10 +59,10 @@ int readFile(FILE *fl, struct line **arr){
 }
 
 // Компаратор для анс. логн лонг
-int cmpULL(const unsigned long long *a, const unsigned long long *b){
-	if(*a > *b)
+int cmpULL(const void *a, const void *b){
+	if(* (unsigned long long*) a > * (unsigned long long*) b)
 		return 1;
-	if(*a < *b)
+	if(* (unsigned long long*) a < * (unsigned long long*) b)
 		return -1;
 	return 0;
 }

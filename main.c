@@ -21,7 +21,8 @@ int main(int argv, char *args[]){
 	if(!arr){
 		printf("Can not read file %s\n", args[1]);
 		printf("Format of file:\n");
-		printf("First line - number N of strings, then N lines ending with '\\n'\n");
+		printf("\tFirst line - number N (max: 100000) of strings\n");
+		printf("\tThen N lines ending with '\\n'. Max lenth: 1000 (or 1001 with '\\n')\n");
 		return EXIT_FAILURE;
 	}
 
@@ -32,8 +33,10 @@ int main(int argv, char *args[]){
 
 	printUnique(arr, numberOfLines);
 
-	printf("\n\nOK\n\n");
-
+	for(size_t i = 0; i < numberOfLines; i++){
+		free(arr[i]._line);
+	}
 	free(arr);
+
 	return EXIT_SUCCESS;
 }
