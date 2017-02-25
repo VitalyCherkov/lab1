@@ -16,7 +16,7 @@ int main(int argv, char *args[]){
 	}
 
 	struct line *arr = NULL;
-	if(!readFile(fl, arr)){
+	if(readFile(fl, arr) == EXIT_FAILURE){
 		printf("Can not read file %s\n", args[1]);
 		printf("Format of file:\n");
 		printf("First line - number N of strings, then N lines ending with '\\n'\n");
@@ -30,8 +30,9 @@ int main(int argv, char *args[]){
 
 	printUnique(arr, sizeof(arr) / sizeof(arr[0]));
 
+	printf("\n\nGOOD BYE\n\n");
+
 	free(fl);
 	free(arr);
 	return EXIT_SUCCESS;
 }
-
