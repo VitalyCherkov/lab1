@@ -10,10 +10,9 @@ struct line{
   unsigned long long hash;
 };
 
-int readFile(FILE *fl, struct line *arr);
+struct line* readFile(FILE *fl);
 
 int cmpULL(const unsigned long long *a, const unsigned long long *b);
 int printUnique(const struct line *arr, const size_t valueOfLines);
 
 #endif
-

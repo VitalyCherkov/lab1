@@ -18,28 +18,29 @@ static unsigned long long getHash(const char *str){
 }
 
 // Ввод текстового файла
-int readFile(FILE *fl, struct line *arr){
+struct line* readFile(FILE *fl){
+	struct line *arr;
 	size_t valueOfLines;
-	char sValueOfLines[10];
+	char sValueOfLines[20];
 
 	if(!fgets(sValueOfLines, sizeof(sValueOfLines), fl))
-		return EXIT_FAILURE;
+		return NULL;
 	if(!(valueOfLines = atoi(sValueOfLines)))
-		return EXIT_FAILURE;
+		return NULL;
 
 	arr = malloc(sizeof(struct line) * valueOfLines);
 
 	char inputString[1000];
 	for(size_t i = 0; i < valueOfLines; i++){
 		if(!fgets(inputString, sizeof(inputString), fl))
-			return EXIT_FAILURE;
+			return NULL;
 
 		arr[i]._line = malloc(sizeof(inputString));
 		strcpy(arr[i]._line, inputString);
 		arr[i].hash = getHash(arr[i]._line);
 	}
 
-	return EXIT_SUCCESS;
+	return arr;
 }
 
 // Компаратор для анс. логн лонг
@@ -80,4 +81,3 @@ int printUnique(const struct line *arr, const size_t valueOfLines){
 	free(pPos);
 	return EXIT_SUCCESS;
 }
-
