@@ -34,12 +34,6 @@ int readFile(FILE *fl, struct line **arr){
 		return 0;
 	}
 
-	//if(!(numberOfLines = atoi(sNumberOfLines)) || numberOfLines > maxNumberOfLines){
-	//	free(*arr);
-	//	*arr = NULL;
-	//	return 0;
-	//}
-
 	*arr = malloc(sizeof(struct line) * numberOfLines);
 
 	char inputString[1002];
@@ -54,7 +48,7 @@ int readFile(FILE *fl, struct line **arr){
 		strcpy((*arr)[i]._line, inputString);
 		(*arr)[i].hash = getHash((*arr)[i]._line);
 	}
-	
+
 	return numberOfLines;
 }
 
@@ -93,6 +87,5 @@ int printUnique(const struct line *arr, const size_t numberOfLines){
 
 	free(hashes);
 	free(isPrinted);
-	//free(pPos);
 	return EXIT_SUCCESS;
 }
