@@ -54,7 +54,7 @@ int readFile(FILE *fl, struct line **arr){
 		strcpy((*arr)[i]._line, inputString);
 		(*arr)[i].hash = getHash((*arr)[i]._line);
 	}
-
+	
 	return numberOfLines;
 }
 

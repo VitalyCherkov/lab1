@@ -37,6 +37,6 @@ int main(int argv, char *args[]){
 		free(arr[i]._line);
 	}
 	free(arr);
-
+	fclose(fl);
 	return EXIT_SUCCESS;
 }
